@@ -2,7 +2,25 @@ from flask import Flask, request, render_template
 import joblib
 import numpy as np
 import pandas as pd
-
+from sklearn.base import BaseEstimator,TransformerMixin
+class feature(BaseEstimator,TransformerMixin):
+  def __init__(self):
+    pass
+  def fit(self,x,y=None):
+    return self
+  def transform(self,x):
+    h=x.copy()
+    if 'Loan_ID' in h.columns:
+      h.drop('Loan_ID',axis=1,inplace=True)
+    if 'ApplicantIncome' in h.columns and 'LoanAmount' in h.columns:
+      h['Balance']=h['ApplicantIncome']-h['LoanAmount']
+    if 'Loan_Status' in h.columns:
+      h['Loan_status']=h['Loan_Status'].map({'Y':1,'N':0})
+    if 'Dependents' in h.columns:
+      h['Dependents'] = h['Dependents'].replace('3+', 3).astype(float)
+    if 'ApplicantIncome' in h.columns and 'CoapplicantIncome' in h.columns:
+      h['Total_Income']=h['ApplicantIncome']+h['CoapplicantIncome']
+    return h
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -45,3 +63,4 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
