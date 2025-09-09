@@ -1,4 +1,4 @@
-Flask
+flask
 gunicorn
 joblib
 numpy
@@ -7,4 +7,5 @@ scikit-learn
 xgboost
 imbalanced-learn
 matplotlib
+
 seaborn
